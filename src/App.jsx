@@ -3,11 +3,25 @@ import World from "./World"
 import { Bvh } from "@react-three/drei"
 import { EcctrlJoystick } from "ecctrl"
 import { useEffect, useState } from "react"
+import { ErrorBoundary } from "react-error-boundary"
 
 function App() {
+  // trying keyE interaction mode
+  const [interactionMode, setInteractionMode] = useState(false);
   return (
     <>
-    <EcctrlJoystickControls />
+    <ErrorBoundary fallback={
+        <div style={{
+          display:"flex",
+          alignItems:"center",
+          justifyContent:"center",
+          height:"100vh",
+          width:"100vw"
+        }}>
+          Smth wrong error boundary
+        </div>
+      }>
+      <EcctrlJoystickControls />
       <Canvas
         shadows
         camera={{
@@ -16,14 +30,15 @@ function App() {
         far: 1000,
       }}
       onPointerDown={(e) => {
-        if (e.pointerType === 'mouse') {
+        if (e.pointerType === 'mouse' && !interactionMode) {
           e.target.requestPointerLock()
         }
       }}>
         <Bvh firstHitOnly>
-            <World/>
+            <World setInteractionMode={setInteractionMode}/>
         </Bvh>
       </Canvas>
+      </ErrorBoundary>
     </>
   )
 }

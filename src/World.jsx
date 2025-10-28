@@ -44,28 +44,26 @@ function Box({ color = "white", ...props }) {
   );
 }
 
-export default function World() {
+export default function World({ setInteractionMode }) {
   const slopes = useGLTF("./slopes.glb");
   const shape = useGLTF("./shape.glb");
   const ladder = useGLTF("./ladder.glb");
 
-  const [interactionMode, setInteractionMode] = useState(false);
+  const [interactionMode, setLocalInteractionMode] = useState(false);
   useEffect(() => {
     const handleKey = (e) => {
       if (e.code === 'KeyE') {
-        setInteractionMode((prev) => !prev);
+        setLocalInteractionMode((prev) => !prev);
+        setInteractionMode?.((prev) => !prev); // also tell App, optional
       }
     };
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
-  }, []);
+  }, [setInteractionMode]);
+
   useEffect(() => {
-  if (interactionMode) {
-    document.exitPointerLock?.();
-  } else {
-    // Ecctrl reacquires pointer lock auto
-  }
-}, [interactionMode]);
+    if (interactionMode) document.exitPointerLock?.();
+  }, [interactionMode]);
 
   const [hover, setHover] = useState(false);
   const bumpCube = useRef();
@@ -115,7 +113,7 @@ export default function World() {
           position={[0, -0.99, 0]}
           userData={{ camExcludeCollision: true }}
         />
-        <Physics>
+        <Physics gravity={[0, -9.81, 0]}>
           <KeyboardControls map={keyboardMap}>
             <Ecctrl
               camCollision={false}
