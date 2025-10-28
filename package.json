@@ -11,7 +11,6 @@
   },
   "dependencies": {
     "@dimforge/rapier3d": "^0.19.0",
-    "@dimforge/rapier3d-compat": "^0.19.2",
     "@react-three/drei": "^10.7.6",
     "@react-three/fiber": "^9.3.0",
     "@react-three/rapier": "^2.1.0",
@@ -22,6 +21,9 @@
     "react-error-boundary": "^6.0.0",
     "three": "^0.180.0",
     "vite-plugin-wasm": "^3.5.0"
+  },
+  "overrides": {
+    "@dimforge/rapier3d-compat": "0.15.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",
