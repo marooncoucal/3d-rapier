@@ -1,0 +1,20 @@
+mac
+(win)
+
+npm uninstall @dimforge/rapier3d-compat
+
+in package.json. after dependencies
+"overrides": {
+  "@dimforge/rapier3d-compat": "0.15.0"
+}
+
+rm -rf node_modules package-lock.json
+(Remove-Item -Recurse -Force node_modules, package-lock.json)
+
+npm install
+
+rm -rf node_modules/.vite
+(Remove-Item -Recurse -Force .\node_modules\.vite)
+
+npm ls @dimforge/rapier3d-compat 
+=> @dimforge/rapier3d-compat@0.15.0 deduped

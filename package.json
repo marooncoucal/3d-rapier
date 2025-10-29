@@ -22,7 +22,7 @@
     "three": "^0.180.0",
     "vite-plugin-wasm": "^3.5.0"
   },
-  "overrides": {
+    "overrides": {
     "@dimforge/rapier3d-compat": "0.15.0"
   },
   "devDependencies": {
