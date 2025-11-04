@@ -17,4 +17,4 @@ rm -rf node_modules/.vite
 (Remove-Item -Recurse -Force .\node_modules\.vite)
 
 npm ls @dimforge/rapier3d-compat 
-=> @dimforge/rapier3d-compat@0.15.0 deduped
+result expected => @dimforge/rapier3d-compat@0.15.0 deduped
