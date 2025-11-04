@@ -54,13 +54,12 @@ export default function World({ setInteractionMode }) {
     const handleKey = (e) => {
       if (e.code === 'KeyE') {
         setLocalInteractionMode((prev) => !prev);
-        setInteractionMode?.((prev) => !prev); // also tell App, optional
+        setInteractionMode?.((prev) => !prev);
       }
     };
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
   }, [setInteractionMode]);
-
   useEffect(() => {
     if (interactionMode) document.exitPointerLock?.();
   }, [interactionMode]);
@@ -72,46 +71,36 @@ export default function World({ setInteractionMode }) {
   };
   //  https://rapier.rs/javascript3d/classes/RigidBody.html#applyImpulse
 
+  //const [scaleTest, setScaleTest] = useState(false) // works
   const spinCube = useRef();
-  const [spinLeft, setSpinLeft] = useState(false);
-  // const [scaleTest, setScaleTest] = useState(false) // works
-  useFrame(() => {
-    if (spinLeft && spinCube.current) {
-      const rotQ = spinCube.current.rotation();
-      const euler = new THREE.Euler().setFromQuaternion(rotQ);
-      euler.y += 0.05;
-      const newQ = new THREE.Quaternion().setFromEuler(euler);
-      spinCube.current.setNextKinematicRotation(newQ);
+  const rotateStepLeft = () => {
+    if (spinCube.current) {
+      const curRot = spinCube.current.rotation();
+      const currentQuat = new THREE.Quaternion(curRot.x, curRot.y, curRot.z, curRot.w);
+      const incrementQuat = new THREE.Quaternion().setFromAxisAngle(
+        new THREE.Vector3(0, 1, 0),
+        -Math.PI / 6 // 30
+      );
+      currentQuat.multiply(incrementQuat);
+      spinCube.current.setNextKinematicRotation({ x: currentQuat.x, y: currentQuat.y, z: currentQuat.z, w: currentQuat.w });
     }
-  });  // rotation() returns a quaternion; convert to Euler, change Y, and set back
-
-
-  useEffect(() => {
-    shape.scene.traverse((child) => {
-      if (child instanceof THREE.Mesh) {
-        child.castShadow = true;
-        child.material.color = new THREE.Color(1, 0, 0);
-      }
-    });
-    slopes.scene.traverse((child) => {
-      if (
-        child instanceof THREE.Mesh &&
-        child.material instanceof THREE.MeshStandardMaterial
-      ) {
-        child.receiveShadow = true;
-      }
-    });
-  });
-
+  };
+  const rotateStepRight = () => {
+    if (spinCube.current) {
+      const curRot = spinCube.current.rotation();
+      const currentQuat = new THREE.Quaternion(curRot.x, curRot.y, curRot.z, curRot.w);
+      const incrementQuat = new THREE.Quaternion().setFromAxisAngle(
+        new THREE.Vector3(0, 1, 0),
+        Math.PI / 6 // 30
+      );
+      currentQuat.multiply(incrementQuat);
+      spinCube.current.setNextKinematicRotation({ x: currentQuat.x, y: currentQuat.y, z: currentQuat.z, w: currentQuat.w});
+    }
+  };
   return (
     <>
       <Suspense>
-        <Grid
-          args={[300, 300]}
-          sectionColor={"lightgray"}
-          cellColor={"gray"}
-          position={[0, -0.99, 0]}
-          userData={{ camExcludeCollision: true }}
+        <Grid args={[300, 300]} sectionColor={"lightgray"} cellColor={"gray"} position={[0, -0.99, 0]} userData={{ camExcludeCollision: true }}
         />
         <Physics gravity={[0, -9.81, 0]}>
           <KeyboardControls map={keyboardMap}>
@@ -178,7 +167,7 @@ export default function World({ setInteractionMode }) {
           {/* purple cube to spin */}
           <RigidBody
             position={[0, 0.4, 2]}
-            // rotation={[0, Math.PI /4, 0]}
+            rotation={[0, Math.PI /4, 0]}
             type="kinematicPosition"
             restitution={0.8}
             ref={spinCube}
@@ -193,15 +182,14 @@ export default function World({ setInteractionMode }) {
           <RigidBody 
             type="fixed" 
             position={[0.3, 0, 1]}
-            // onClick={() => alert('Hellooo')} // works
-            // onClick={() => setActive(!scaleTest)} // works
-            // onClick={() => setSpinLeft(true) && console.log("clicked")} // doesn't work
-            onClick={(e) => {
+            // onClick={() => alert('Hellooo')} // worked
+            // onClick={() => setScaleTest(!scaleTest)} // worked
+            // onClick={() => setSpinLeft(!spinLeft) && console.log("clicked")} // worked
+            onClick ={(e) => {
               if (!interactionMode) return;
               e.stopPropagation(); // stop other listeners (like Ecctrl) from handling this click and requesting pointer lock
               console.log('Clicked green button');
-              // setSpinLeft(true)
-              setSpinLeft((v) => !v);
+              rotateStepLeft();
             }}
           >
             <mesh>
@@ -210,8 +198,15 @@ export default function World({ setInteractionMode }) {
             </mesh>
           </RigidBody>
           {/* button right red*/}
-          <RigidBody type="fixed" position={[-0.3, 0, 1]}
-            onClick={() => setSpinLeft(true) && console.log("clicked")}
+          <RigidBody 
+            type="fixed"
+            position={[-0.3, 0, 1]}
+            onClick ={(e) => {
+              if (!interactionMode) return;
+              e.stopPropagation(); // stop other listeners (like Ecctrl) from handling this click and requesting pointer lock
+              console.log('Clicked red button');
+              rotateStepRight();
+            }}
           >
             <mesh>
               <boxGeometry args={[0.2, 0.2, 0.02]} />
@@ -220,11 +215,11 @@ export default function World({ setInteractionMode }) {
           </RigidBody>
 
 
-          <KotikiModel position={[0, 3, 5]}/>
+          <KotikiModel position={[0, 2, 5]}/>
 
 
           {/* riggied pink floor boards */}
-          <RigidBody position={[-10, -0.9, 20]}>
+          {/* <RigidBody position={[-10, -0.9, 20]}>
             <RigidBody type="fixed" position={[0, -0.9, 5]}>
               <mesh receiveShadow>
                 <boxGeometry args={[4, 0.2, 0.2]} />
@@ -255,26 +250,27 @@ export default function World({ setInteractionMode }) {
                 <meshStandardMaterial color={"lightpink"} />
               </mesh>
             </RigidBody>
-          </RigidBody>
+          </RigidBody> */}
           {/* slopes */}
-          <RigidBody position={[-10, -1, 10]}
+          {/* <RigidBody position={[-10, -1, 10]}
             type="fixed"
             colliders="trimesh"
             rotation={[0, Math.PI, 0]}
           >
             <primitive object={slopes.scene} />
-          </RigidBody>
+          </RigidBody> */}
 
           {/* our red mesh */}
-          <RigidBody type="dynamic" colliders="trimesh" position={[-4, 0, 15]}>
+          {/* <RigidBody type="dynamic" colliders="trimesh" position={[-4, 0, 15]}>
             <primitive object={shape.scene} />
-          </RigidBody>
+          </RigidBody> */}
           {/* ladder */}
-          <RigidBody position={[-4, 0, 15]}>
+          {/* <RigidBody position={[-4, 0, 15]}>
             <primitive object={ladder.scene}></primitive>
-          </RigidBody>
-          <Arch1 />
-          <RigidBody
+          </RigidBody> */}
+          {/* <Arch1 /> */}
+          {/* deer */}
+          {/* <RigidBody
             colliders="cuboid"
             type="dynamic"
             position={[-10, 5, 10]}
@@ -282,7 +278,7 @@ export default function World({ setInteractionMode }) {
             rotation={[0, Math.PI / 3, 0]}
           >
             <DeerModelTest1 />
-          </RigidBody>
+          </RigidBody> */}
 
         </Physics>
       </Suspense>
