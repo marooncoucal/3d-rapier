@@ -3,33 +3,39 @@ import { useGLTF } from "@react-three/drei"
 import { useFrame } from "@react-three/fiber"
 import { quat, RigidBody } from "@react-three/rapier"
 import { useRef } from "react"
+import { ButtonsSpinLR } from "./actions/buttonsSpinLR"
 
 export function KotikiModel({position = [0,0,0]}) {
     const kotiki2 = useGLTF("/kotitki.glb");
-
-    const spinner = useRef();
-    // 5:41 https://youtu.be/OpYtwrtpePY?si=UPK2dpHICZ4at2YO
-    useFrame((_state, delta) => {
-        const curRotation = quat(spinner.current.rotation());
-        const incrementRotation = new THREE.Quaternion().setFromAxisAngle(
-            new THREE.Vector3(0,1,0),
-            delta*1 // elapsed time * speed
-        );
-        curRotation.multiply(incrementRotation);
-        spinner.current.setNextKinematicRotation(curRotation);
-    })
-
+    const spin = useRef();
     return (
-        <RigidBody
-            type="kinematicPosition"
-            ref={spinner}
-            scale={0.1}
-            position={position}
-        >
-            <primitive object={kotiki2.scene} />
-        </RigidBody>
+        <>
+            <RigidBody
+                type="kinematicPosition"
+                // ref={spinner} // continuous rotation
+                ref={spin}
+                scale={0.1}
+                position={position}
+            >
+                <primitive object={kotiki2.scene} />
+            </RigidBody>
+            <ButtonsSpinLR spinRef={spin}/>
+        </>
     )
 }
+
+
+// const spinner = useRef();
+// 5:41 https://youtu.be/OpYtwrtpePY?si=UPK2dpHICZ4at2YO
+// useFrame((_state, delta) => {
+//     const curRotation = quat(spinner.current.rotation());
+//     const incrementRotation = new THREE.Quaternion().setFromAxisAngle(
+//         new THREE.Vector3(0,1,0),
+//         delta*1 // elapsed time * speed
+//     );
+//     curRotation.multiply(incrementRotation);
+//     spinner.current.setNextKinematicRotation(curRotation);
+// })
 
 // const [spinLeft, setSpinLeft] = useState(false);
 // useFrame((_, delta) => {
