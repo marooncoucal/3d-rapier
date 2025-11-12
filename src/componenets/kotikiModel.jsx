@@ -1,7 +1,8 @@
 import * as THREE from "three";
+import { Html } from "@react-three/drei";
 import { useGLTF } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
-import { quat, RigidBody } from "@react-three/rapier";
+import { CuboidCollider, quat, RigidBody } from "@react-three/rapier";
 import { useEffect, useRef, useState } from "react";
 import { ButtonsSpinLR } from "./actions/buttonsSpinLR";
 
@@ -12,20 +13,60 @@ export function KotikiModel({
 }) {
   const kotiki2 = useGLTF("/kotitki.glb");
   const spin = useRef();
+  const [areaEnterFlag, setAreaEnterFlag] = useState(false)
   return (
-    <>
-      <RigidBody
-        type="kinematicPosition"
-        // ref={spinner} // continuous rotation
-        ref={spin}
-        // ref={reference}
-        scale={0.1}
-        position={position}
-      >
-        <primitive object={kotiki2.scene} />
-      </RigidBody>
-      <ButtonsSpinLR spinRef={spin} setInteractionMode={setInteractionMode}/>
-    </>
+    <RigidBody position={position} type='fixed'>
+        <RigidBody type='fixed' position={[0,0,0]}>
+            <CuboidCollider 
+                sensor
+                args={[3, 3, 3]}
+                onIntersectionEnter={() => {
+                    console.log('player entered sensor area Kotiki');
+                    setAreaEnterFlag(true);
+                }}
+                onIntersectionExit={() => {
+                    console.log("player left sensor area Kotiki");
+                    setAreaEnterFlag(false);
+                }}
+            />
+        </RigidBody>
+        <RigidBody
+            type="kinematicPosition"
+            // ref={reference}
+            // ref={spinner} // continuous rotation
+            ref={spin}
+            scale={0.1}
+            position={[0,0,4]}
+        >
+            <primitive object={kotiki2.scene} />
+        </RigidBody>
+        { areaEnterFlag &&
+            <>
+                <ButtonsSpinLR spinRef={spin} setInteractionMode={setInteractionMode}/>
+                <Html fullscreen>
+                    <div
+                        style={{
+                        position: "fixed",
+                        width: "max-content",
+                        bottom: "20px",
+                        left: 0,
+                        right: 0,
+                        transform: "translateX(-50%)",
+                        backgroundColor: "rgba(0,0,0,0.7)",
+                        color: "white",
+                        padding: "10px 20px",
+                        zIndex: 1000,
+                        fontSize: "16px",
+                        pointerEvents: "none",
+                        userSelect: "none",
+                        }}
+                    >
+                        press E to interact
+                    </div>
+                </Html>
+            </>
+        }
+    </RigidBody>
   );
 }
 

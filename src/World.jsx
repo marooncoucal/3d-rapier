@@ -118,56 +118,6 @@ export default function World({ setInteractionMode }) {
 
           <KotikiModel setInteractionMode={setInteractionMode} position={[0, 0, 4]}/>
 
-          {/* purple cube to spin */}
-          {/* <RigidBody
-            position={[0, 0.4, 2]}
-            rotation={[0, Math.PI /4, 0]}
-            type="kinematicPosition"
-            restitution={0.8}
-            // ref={spinCube}
-            // scale={scaleTest ? 1.5 : 1} 
-          >
-            <mesh>
-              <boxGeometry args={[0.5, 0.5, 0.5]} />
-              <meshStandardMaterial color={'purple'} />
-            </mesh>
-          </RigidBody> */}
-          {/* button left green */}
-          {/* <RigidBody 
-            type="fixed" 
-            position={[0.3, 0, 1]}
-            // onClick={() => alert('Hellooo')} // worked
-            // onClick={() => setScaleTest(!scaleTest)} // worked
-            // onClick={() => setSpinLeft(!spinLeft) && console.log("clicked")} // worked
-            onClick ={(e) => {
-              if (!interactionMode) return;
-              e.stopPropagation(); // stop other listeners (like Ecctrl) from handling this click and requesting pointer lock
-              console.log('Clicked green button');
-              rotateStepLeft();
-            }}
-          >
-            <mesh>
-              <boxGeometry args={[0.2, 0.2, 0.02]} />
-              <meshStandardMaterial color={'green'} />
-            </mesh>
-          </RigidBody> */}
-          {/* button right red*/}
-          {/* <RigidBody 
-            type="fixed"
-            position={[-0.3, 0, 1]}
-            onClick ={(e) => {
-              if (!interactionMode) return;
-              e.stopPropagation(); // stop other listeners (like Ecctrl) from handling this click and requesting pointer lock
-              console.log('Clicked red button');
-              rotateStepRight();
-            }}
-          >
-            <mesh>
-              <boxGeometry args={[0.2, 0.2, 0.02]} />
-              <meshStandardMaterial color={'red'} />
-            </mesh>
-          </RigidBody> */}
-
 
           {/* interaction blue cube */}
           {/* <RigidBody
