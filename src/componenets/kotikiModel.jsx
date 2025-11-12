@@ -2,24 +2,41 @@ import * as THREE from "three"
 import { useGLTF } from "@react-three/drei"
 import { useFrame } from "@react-three/fiber"
 import { quat, RigidBody } from "@react-three/rapier"
-import { useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import { ButtonsSpinLR } from "./actions/buttonsSpinLR"
 
-export function KotikiModel({position = [0,0,0]}) {
+export function KotikiModel({position = [0,0,0], setInteractionMode, reference}) {
     const kotiki2 = useGLTF("/kotitki.glb");
+
+    // const [interactionMode, setLocalInteractionMode] = useState(false);
+    // useEffect(() => {
+    // const handleKey = (e) => {
+    //     if (e.code === 'KeyE') {
+    //     setLocalInteractionMode((prev) => !prev);
+    //     setInteractionMode?.((prev) => !prev);
+    //     }
+    // };
+    // window.addEventListener('keydown', handleKey);
+    // return () => window.removeEventListener('keydown', handleKey);
+    // }, [setInteractionMode]);
+    // useEffect(() => {
+    // if (interactionMode) document.exitPointerLock?.();
+    // }, [interactionMode]);
+
     const spin = useRef();
     return (
         <>
             <RigidBody
                 type="kinematicPosition"
                 // ref={spinner} // continuous rotation
-                ref={spin}
+                // ref={spin}
+                ref={reference}
                 scale={0.1}
                 position={position}
             >
                 <primitive object={kotiki2.scene} />
             </RigidBody>
-            <ButtonsSpinLR spinRef={spin}/>
+            {/* <ButtonsSpinLR spinRef={spin}/> */}
         </>
     )
 }

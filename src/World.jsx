@@ -30,67 +30,67 @@ const keyboardMap = [
   { name: "toggleRight", keys: ["KeyL"] },
 ];
 
-function ButtonsSpin(){
-  const rotateStepLeft = () => {
-    if (spinRef.current) {
-      const curRot = spinRef.current.rotation();
-      const currentQuat = new THREE.Quaternion(curRot.x, curRot.y, curRot.z, curRot.w);
-      const incrementQuat = new THREE.Quaternion().setFromAxisAngle(
-        new THREE.Vector3(0, 1, 0),
-        -Math.PI / 12 // 30
-      );
-      currentQuat.multiply(incrementQuat);
-      spinRef.current.setNextKinematicRotation({ x: currentQuat.x, y: currentQuat.y, z: currentQuat.z, w: currentQuat.w });
-    }
-  };
-  const rotateStepRight = () => {
-    if (spinRef.current) {
-      const curRot = spinRef.current.rotation();
-      const currentQuat = new THREE.Quaternion(curRot.x, curRot.y, curRot.z, curRot.w);
-      const incrementQuat = new THREE.Quaternion().setFromAxisAngle(
-        new THREE.Vector3(0, 1, 0),
-        Math.PI / 12 // 30
-      );
-      currentQuat.multiply(incrementQuat);
-      spinRef.current.setNextKinematicRotation({ x: currentQuat.x, y: currentQuat.y, z: currentQuat.z, w: currentQuat.w});
-    }
-  };
-  return(
-    <>
-      <RigidBody 
-        type="fixed" 
-        position={[0.3, 0, 1]}
-        onClick ={(e) => {
-          if (!interactionMode) return;
-          e.stopPropagation(); // stop other listeners (like Ecctrl) from handling this click and requesting pointer lock
-          console.log('Clicked green button');
-          rotateStepLeft();
-        }}
-      >
-        <mesh>
-          <boxGeometry args={[0.2, 0.2, 0.02]} />
-          <meshStandardMaterial color={'green'} />
-        </mesh>
-      </RigidBody>
-      {/* button right red*/}
-      <RigidBody 
-        type="fixed"
-        position={[-0.3, 0, 1]}
-        onClick ={(e) => {
-          if (!interactionMode) return;
-          e.stopPropagation(); // stop other listeners (like Ecctrl) from handling this click and requesting pointer lock
-          console.log('Clicked red button');
-          rotateStepRight();
-        }}
-      >
-        <mesh>
-          <boxGeometry args={[0.2, 0.2, 0.02]} />
-          <meshStandardMaterial color={'red'} />
-        </mesh>
-      </RigidBody>
-    </>
-  )
-}
+// function ButtonsSpin(){
+//   const rotateStepLeft = () => {
+//     if (spinRef.current) {
+//       const curRot = spinRef.current.rotation();
+//       const currentQuat = new THREE.Quaternion(curRot.x, curRot.y, curRot.z, curRot.w);
+//       const incrementQuat = new THREE.Quaternion().setFromAxisAngle(
+//         new THREE.Vector3(0, 1, 0),
+//         -Math.PI / 12 // 30
+//       );
+//       currentQuat.multiply(incrementQuat);
+//       spinRef.current.setNextKinematicRotation({ x: currentQuat.x, y: currentQuat.y, z: currentQuat.z, w: currentQuat.w });
+//     }
+//   };
+//   const rotateStepRight = () => {
+//     if (spinRef.current) {
+//       const curRot = spinRef.current.rotation();
+//       const currentQuat = new THREE.Quaternion(curRot.x, curRot.y, curRot.z, curRot.w);
+//       const incrementQuat = new THREE.Quaternion().setFromAxisAngle(
+//         new THREE.Vector3(0, 1, 0),
+//         Math.PI / 12 // 30
+//       );
+//       currentQuat.multiply(incrementQuat);
+//       spinRef.current.setNextKinematicRotation({ x: currentQuat.x, y: currentQuat.y, z: currentQuat.z, w: currentQuat.w});
+//     }
+//   };
+//   return(
+//     <>
+//       <RigidBody 
+//         type="fixed" 
+//         position={[0.3, 0, 1]}
+//         onClick ={(e) => {
+//           if (!interactionMode) return;
+//           e.stopPropagation(); // stop other listeners (like Ecctrl) from handling this click and requesting pointer lock
+//           console.log('Clicked green button');
+//           rotateStepLeft();
+//         }}
+//       >
+//         <mesh>
+//           <boxGeometry args={[0.2, 0.2, 0.02]} />
+//           <meshStandardMaterial color={'green'} />
+//         </mesh>
+//       </RigidBody>
+//       {/* button right red*/}
+//       <RigidBody 
+//         type="fixed"
+//         position={[-0.3, 0, 1]}
+//         onClick ={(e) => {
+//           if (!interactionMode) return;
+//           e.stopPropagation(); // stop other listeners (like Ecctrl) from handling this click and requesting pointer lock
+//           console.log('Clicked red button');
+//           rotateStepRight();
+//         }}
+//       >
+//         <mesh>
+//           <boxGeometry args={[0.2, 0.2, 0.02]} />
+//           <meshStandardMaterial color={'red'} />
+//         </mesh>
+//       </RigidBody>
+//     </>
+//   )
+// }
 
 
 function Box({ color = "white", ...props }) {
@@ -131,34 +131,34 @@ export default function World({ setInteractionMode }) {
   const bumpImpulse = () => {
     bumpCube.current.applyImpulse({ x: 0, y: 5, z: 0 });
   };
-  //https://rapier.rs/javascript3d/classes/RigidBody.html#applyImpulse
+  // https://rapier.rs/javascript3d/classes/RigidBody.html#applyImpulse
 
-  //const [scaleTest, setScaleTest] = useState(false) // works
-  // const spinCube = useRef();
-  // const rotateStepLeft = () => {
-  //   if (spinCube.current) {
-  //     const curRot = spinCube.current.rotation();
-  //     const currentQuat = new THREE.Quaternion(curRot.x, curRot.y, curRot.z, curRot.w);
-  //     const incrementQuat = new THREE.Quaternion().setFromAxisAngle(
-  //       new THREE.Vector3(0, 1, 0),
-  //       -Math.PI / 12 // 30
-  //     );
-  //     currentQuat.multiply(incrementQuat);
-  //     spinCube.current.setNextKinematicRotation({ x: currentQuat.x, y: currentQuat.y, z: currentQuat.z, w: currentQuat.w });
-  //   }
-  // };
-  // const rotateStepRight = () => {
-  //   if (spinCube.current) {
-  //     const curRot = spinCube.current.rotation();
-  //     const currentQuat = new THREE.Quaternion(curRot.x, curRot.y, curRot.z, curRot.w);
-  //     const incrementQuat = new THREE.Quaternion().setFromAxisAngle(
-  //       new THREE.Vector3(0, 1, 0),
-  //       Math.PI / 12 // 30
-  //     );
-  //     currentQuat.multiply(incrementQuat);
-  //     spinCube.current.setNextKinematicRotation({ x: currentQuat.x, y: currentQuat.y, z: currentQuat.z, w: currentQuat.w});
-  //   }
-  // };
+  // const [scaleTest, setScaleTest] = useState(false) // works
+  const spinCube = useRef();
+  const rotateStepLeft = () => {
+    if (spinCube.current) {
+      const curRot = spinCube.current.rotation();
+      const currentQuat = new THREE.Quaternion(curRot.x, curRot.y, curRot.z, curRot.w);
+      const incrementQuat = new THREE.Quaternion().setFromAxisAngle(
+        new THREE.Vector3(0, 1, 0),
+        -Math.PI / 12 // 30
+      );
+      currentQuat.multiply(incrementQuat);
+      spinCube.current.setNextKinematicRotation({ x: currentQuat.x, y: currentQuat.y, z: currentQuat.z, w: currentQuat.w });
+    }
+  };
+  const rotateStepRight = () => {
+    if (spinCube.current) {
+      const curRot = spinCube.current.rotation();
+      const currentQuat = new THREE.Quaternion(curRot.x, curRot.y, curRot.z, curRot.w);
+      const incrementQuat = new THREE.Quaternion().setFromAxisAngle(
+        new THREE.Vector3(0, 1, 0),
+        Math.PI / 12 // 30
+      );
+      currentQuat.multiply(incrementQuat);
+      spinCube.current.setNextKinematicRotation({ x: currentQuat.x, y: currentQuat.y, z: currentQuat.z, w: currentQuat.w});
+    }
+  };
   return (
     <>
       <Suspense>
@@ -203,9 +203,61 @@ export default function World({ setInteractionMode }) {
           </directionalLight>
           <ambientLight intensity={0.5} />
 
+          <KotikiModel reference={spinCube} setInteractionMode={setInteractionMode} position={[0, 0, 4]}/>
 
-          {/* interaction */}
-          <RigidBody
+          {/* purple cube to spin */}
+          {/* <RigidBody
+            position={[0, 0.4, 2]}
+            rotation={[0, Math.PI /4, 0]}
+            type="kinematicPosition"
+            restitution={0.8}
+            // ref={spinCube}
+            // scale={scaleTest ? 1.5 : 1} 
+          >
+            <mesh>
+              <boxGeometry args={[0.5, 0.5, 0.5]} />
+              <meshStandardMaterial color={'purple'} />
+            </mesh>
+          </RigidBody> */}
+          {/* button left green */}
+          <RigidBody 
+            type="fixed" 
+            position={[0.3, 0, 1]}
+            // onClick={() => alert('Hellooo')} // worked
+            // onClick={() => setScaleTest(!scaleTest)} // worked
+            // onClick={() => setSpinLeft(!spinLeft) && console.log("clicked")} // worked
+            onClick ={(e) => {
+              if (!interactionMode) return;
+              e.stopPropagation(); // stop other listeners (like Ecctrl) from handling this click and requesting pointer lock
+              console.log('Clicked green button');
+              rotateStepLeft();
+            }}
+          >
+            <mesh>
+              <boxGeometry args={[0.2, 0.2, 0.02]} />
+              <meshStandardMaterial color={'green'} />
+            </mesh>
+          </RigidBody>
+          {/* button right red*/}
+          <RigidBody 
+            type="fixed"
+            position={[-0.3, 0, 1]}
+            onClick ={(e) => {
+              if (!interactionMode) return;
+              e.stopPropagation(); // stop other listeners (like Ecctrl) from handling this click and requesting pointer lock
+              console.log('Clicked red button');
+              rotateStepRight();
+            }}
+          >
+            <mesh>
+              <boxGeometry args={[0.2, 0.2, 0.02]} />
+              <meshStandardMaterial color={'red'} />
+            </mesh>
+          </RigidBody>
+
+
+          {/* interaction blue cube */}
+          {/* <RigidBody
             colliders="cuboid"
             position={[-3, -3, 9]}
             type="dynamic"
@@ -223,61 +275,7 @@ export default function World({ setInteractionMode }) {
                 bumpImpulse() && console.log("clicked");
               }}
             />
-          </RigidBody>
-
-
-          {/* purple cube to spin */}
-          {/* <RigidBody
-            position={[0, 0.4, 2]}
-            rotation={[0, Math.PI /4, 0]}
-            type="kinematicPosition"
-            restitution={0.8}
-            ref={spinCube}
-            // scale={scaleTest ? 1.5 : 1} 
-          >
-            <mesh>
-              <boxGeometry args={[0.5, 0.5, 0.5]} />
-              <meshStandardMaterial color={'purple'} />
-            </mesh>
           </RigidBody> */}
-          {/* button left green */}
-          {/* <RigidBody 
-            type="fixed" 
-            position={[0.3, 0, 1]}
-            // onClick={() => alert('Hellooo')} // worked
-            // onClick={() => setScaleTest(!scaleTest)} // worked
-            // onClick={() => setSpinLeft(!spinLeft) && console.log("clicked")} // worked
-            onClick ={(e) => {
-              if (!interactionMode) return;
-              e.stopPropagation(); // stop other listeners (like Ecctrl) from handling this click and requesting pointer lock
-              console.log('Clicked green button');
-              rotateStepLeft();
-            }}
-          >
-            <mesh>
-              <boxGeometry args={[0.2, 0.2, 0.02]} />
-              <meshStandardMaterial color={'green'} />
-            </mesh>
-          </RigidBody> */}
-          {/* button right red*/}
-          {/* <RigidBody 
-            type="fixed"
-            position={[-0.3, 0, 1]}
-            onClick ={(e) => {
-              if (!interactionMode) return;
-              e.stopPropagation(); // stop other listeners (like Ecctrl) from handling this click and requesting pointer lock
-              console.log('Clicked red button');
-              rotateStepRight();
-            }}
-          >
-            <mesh>
-              <boxGeometry args={[0.2, 0.2, 0.02]} />
-              <meshStandardMaterial color={'red'} />
-            </mesh>
-          </RigidBody> */}
-
-          <KotikiModel position={[0, 0, 4]}/>
-          {/* <ButtonsSpin /> */}
 
           {/* riggied pink floor boards */}
           {/* <RigidBody position={[-10, -0.9, 20]}>

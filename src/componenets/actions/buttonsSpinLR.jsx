@@ -28,6 +28,7 @@ export function ButtonsSpinLR({spinRef}){
   };
   return(
     <>
+      {/* button left green */}
       <RigidBody 
         type="fixed" 
         position={[0.3, 0, 1]}
