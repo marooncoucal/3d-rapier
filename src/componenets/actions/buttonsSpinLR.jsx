@@ -1,7 +1,24 @@
 import * as THREE from "three";
 import { RigidBody } from "@react-three/rapier";
+import { useEffect, useState } from "react";
 
-export function ButtonsSpinLR({spinRef}){
+export function ButtonsSpinLR({spinRef, setInteractionMode}){
+
+  const [interactionMode, setLocalInteractionMode] = useState(false);
+  useEffect(() => {
+    const handleKey = (e) => {
+      if (e.code === "KeyE") {
+        setLocalInteractionMode((prev) => !prev);
+        setInteractionMode?.((prev) => !prev);
+      }
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [setInteractionMode]);
+  useEffect(() => {
+    if (interactionMode) document.exitPointerLock?.();
+  }, [interactionMode]);
+
   const rotateStepLeft = () => {
     if (spinRef.current) {
       const curRot = spinRef.current.rotation();
@@ -13,7 +30,7 @@ export function ButtonsSpinLR({spinRef}){
       currentQuat.multiply(incrementQuat);
       spinRef.current.setNextKinematicRotation({ x: currentQuat.x, y: currentQuat.y, z: currentQuat.z, w: currentQuat.w });
     }
-  };
+  }
   const rotateStepRight = () => {
     if (spinRef.current) {
       const curRot = spinRef.current.rotation();
@@ -25,7 +42,7 @@ export function ButtonsSpinLR({spinRef}){
       currentQuat.multiply(incrementQuat);
       spinRef.current.setNextKinematicRotation({ x: currentQuat.x, y: currentQuat.y, z: currentQuat.z, w: currentQuat.w});
     }
-  };
+  }
   return(
     <>
       {/* button left green */}
